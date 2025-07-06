@@ -3,12 +3,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './posts/post.entity';
 import { User } from './users/user.entity';
-import { createAutoCrudController } from './common/controllers/auto-crud.controller';
-import { QueryParserService } from './common/services/query-parser.service';
-import { CreateUserDto } from './users/dto/create-user.dto';
-import { UpdateUserDto } from './users/dto/update-user.dto';
-import { CreatePostDto } from './posts/dto/create-post.dto';
-import { UpdatePostDto } from './posts/dto/update-post.dto';
+import { UserModule } from './users/user.module';
+import { PostModule } from './posts/post.module';
+import { PrettyLoggerService } from './common/services/logger.service';
 
 @Module({
   imports: [
@@ -18,12 +15,9 @@ import { UpdatePostDto } from './posts/dto/update-post.dto';
       entities: [Post, User],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Post, User]),
+    UserModule,
+    PostModule,
   ],
-  controllers: [
-    createAutoCrudController(Post, 'posts', CreatePostDto, UpdatePostDto),
-    createAutoCrudController(User, 'users', CreateUserDto, UpdateUserDto),
-  ],
-  providers: [QueryParserService],
+  providers: [PrettyLoggerService],
 })
 export class AppModule {}

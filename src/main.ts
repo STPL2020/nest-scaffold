@@ -3,9 +3,15 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { PrettyLoggerService } from './common/services/logger.service';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new PrettyLoggerService(),
+  });
+  const port = process.env.PORT || 3000;
 
   // Enable validation pipes
   app.useGlobalPipes(new ValidationPipe({
@@ -14,8 +20,14 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
+  // Enable logging interceptor
+  app.useGlobalInterceptors(new LoggingInterceptor());
+
+  // Enable global exception filter to catch 404s and other unhandled errors
+  app.useGlobalFilters(new GlobalExceptionFilter());
+
   const config = new DocumentBuilder()
-    .setTitle('Strapi-like API')
+    .setTitle('Nest Scaffold API') 
     .setDescription('Auto-scaffolded API with query support and comprehensive documentation')
     .setVersion('1.0')
     .addBearerAuth()
@@ -26,8 +38,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
-  console.log('Application is running on: http://localhost:3000');
-  console.log('Swagger documentation is available at: http://localhost:3000/api');
+  await app.listen(port);
+  // Log startup message using the logger instance directly
+  const logger = new PrettyLoggerService();
+  logger.log(`🚀 Application is running on: http://localhost:${port}`, 'Bootstrap');
+  logger.log(`📚 Swagger documentation available at: http://localhost:${port}/api`, 'Bootstrap');
 }
 bootstrap();
