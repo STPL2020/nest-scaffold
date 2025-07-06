@@ -1,22 +1,19 @@
 
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Post } from './posts/post.entity';
-import { User } from './users/user.entity';
 import { UserModule } from './users/user.module';
 import { PostModule } from './posts/post.module';
 import { PrettyLoggerService } from './common/services/logger.service';
+import { ConfigModule } from './config/config.module';
+import { DatabaseModule } from './database/database.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [Post, User],
-      synchronize: true,
-    }),
+    ConfigModule,
+    DatabaseModule,
     UserModule,
     PostModule,
+    HealthModule,
   ],
   providers: [PrettyLoggerService],
 })

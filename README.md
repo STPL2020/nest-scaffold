@@ -31,6 +31,50 @@
 $ pnpm install
 ```
 
+## Database Setup
+
+This project uses TypeORM with SQLite for database management. The database configuration is handled through environment variables.
+
+### Environment Configuration
+
+Copy the example environment file and configure your settings:
+
+```bash
+cp env.example .env
+```
+
+### Database Configuration Options
+
+- `DB_DATABASE`: Database file name (default: `db.sqlite`)
+- `DB_SYNCHRONIZE`: Auto-synchronize schema (default: `false` - recommended for production)
+- `DB_LOGGING`: Enable SQL logging (default: `false`)
+- `DB_MIGRATIONS_RUN`: Run migrations on startup (default: `false`)
+- `DB_DROP_SCHEMA`: Drop schema on startup (default: `false`)
+
+### Running Migrations
+
+```bash
+# Generate a new migration
+$ pnpm run migration:generate src/database/migrations/MigrationName
+
+# Run pending migrations
+$ pnpm run migration:run
+
+# Revert the last migration
+$ pnpm run migration:revert
+
+# Show migration status
+$ pnpm run migration:show
+
+# Audit database and show statistics
+$ pnpm run db:audit
+```
+
+### Development vs Production
+
+For development, you can set `DB_SYNCHRONIZE=true` to automatically create tables from entities.
+For production, always use migrations with `DB_SYNCHRONIZE=false`.
+
 ## Compile and run the project
 
 ```bash

@@ -33,6 +33,7 @@ async function bootstrap() {
     .addBearerAuth()
     .addTag('users', 'User management endpoints')
     .addTag('posts', 'Post management endpoints')
+    .addTag('health', 'Health check endpoints')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

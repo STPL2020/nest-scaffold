@@ -4,7 +4,7 @@ import { Post } from './post.entity';
 import { createAutoCrudController } from '../common/controllers/auto-crud.controller';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { QueryParserService } from 'src/common/services/query-parser.service';
+import { QueryParserService } from '../common/services/query-parser.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post])],
